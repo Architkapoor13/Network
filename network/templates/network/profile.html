@@ -1,0 +1,78 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div style="margin:30px;">
+        <fieldset style="border: solid black 1px; text-align: center">
+            <legend style="width: auto; padding: 0 30px 0 30px;">{{ requesteduser.username }}'s Profile</legend>
+            <img src="https://i.stack.imgur.com/34AD2.jpg" alt="profile picture" id="profile-picture">
+            <h1>{{ requesteduser.username }}</h1>
+            <br>
+            <span style="font-size: 2vw; margin: 0 20px 0 20px"><b>Followers</b> <span id="followers-count">{{ followerscount }}</span></span> <span style="font-size: 2vw; margin: 0 20px 0 20px"><b>Following</b> <span id="following-count">{{ followingcount }}</span></span>
+            <br>
+            {% if user.is_authenticated %}
+                {% if user == requesteduser %}
+                {% else %}
+                    <button onclick="followtoggle('{{ requesteduser }}')" class="{{ followbtnclass }}" style="margin: 30px;" id="follow-btn">{{ followbtncontent }}</button>
+                {% endif %}
+            {% else %}
+                <br>
+                <h6><a href="{% url 'login' %}">Login</a> First to follow.</h6>
+                <button class="{{ followbtnclass }}" style="margin: 30px;" disabled>{{ followbtncontent }}</button>
+            {% endif %}
+            <br>
+        </fieldset>
+        <div id="all-posts">
+            {% for post in pageposts %}
+                <div class="post-class">
+                    <input type="hidden" value="{{ post.id }}" id="post-id">
+                    <div style="margin:5px 25px 5px 25px;">
+                        <a href="{% url 'profile' post.user.username 1 %}" id="post-username"><h2>{{ post.user.username }}</h2></a>
+                        <p id="postdata" style="white-space: pre-wrap; overflow: auto;">{{ post.postdata }}</p>
+                        <b>{{ post.timestamp }}</b><br>
+                    </div>
+                    {% if user.is_authenticated %}
+                        {% if post in userlikedposts %}
+                            <i class="fa fa-thumbs-down" id="like-btn" onclick="likepost(this)" style="color: red"></i> <span id="like-count">{{ post.likes.count }}</span>
+                        {% else %}
+                            <i class="fa fa-thumbs-up" id="like-btn" onclick="likepost(this)"></i> <span id="like-count">{{ post.likes.count }}</span>
+                        {% endif %}
+                    {% else %}
+                        <i class="fa fa-thumbs-up" id="like-btn"></i> <span id="like-count">{{ post.likes.count }}</span>
+                    {% endif %}
+                    {% if user == post.user %}
+                        <button onclick="edit(this)" class="btn" style="float:right">
+                            <img src="https://img.icons8.com/fluent/48/000000/edit.png" height="30px" width="30px"/>
+                        </button>
+                    {% endif %}
+                </div>
+            {% empty %}
+                {% if user == requesteduser %}
+                    <h3>No posts posted by you!</h3>
+                {% else %}
+                    <h3>No posts posted by this user!</h3>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <br>
+        <h6>Page {{ currentpage }} of {{ pageposts.paginator.num_pages }}</h6>
+        <div>
+            <form id="pagenumber" action="{% url 'profile' requesteduser.username 1 %}" method="post">
+                {% if pageposts.has_previous %}
+                    <a class="btn btn-primary" style="background-color: mediumpurple" href="/profile/{{ requesteduser.username }}/page={{ pageposts.previous_page_number }}">Prev</a>
+                {% endif %}
+                {% csrf_token %}
+                <input type="number" id="pageinput" value="{{ currentpage }}" min="1" max="{{ pageposts.paginator.num_pages }}" name="wantedpagenumber">
+                {% if pageposts.has_next %}
+                    <a class="btn btn-primary" style="background-color: mediumpurple" href="/profile/{{ requesteduser.username }}/page={{ pageposts.next_page_number }}">Next</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/javascript10.js' %}"></script>
+    <script>
+    </script>
+{% endblock %}

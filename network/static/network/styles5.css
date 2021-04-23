@@ -1,0 +1,65 @@
+/*#post-form{*/
+/*    padding: 20px;*/
+/*    !*margin: 50px;*!*/
+/*}*/
+
+#post-textarea{
+    max-width: 100%;
+    width: 100%;
+}
+
+#index-container{
+    /*padding: 20px;*/
+    margin: 10px 30px 10px 30px;
+}
+
+#post-fieldset{
+    border: solid black 1px;
+
+}
+
+#like-btn{
+    font-size: 30px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+#like-btn:hover{
+    color:red;
+}
+
+.post-class{
+    border: solid black 1px;
+    margin-top: 20px;
+}
+
+.profilebody{
+    margin-top: 15px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+#post-submit{
+    margin-left: 15px;
+    margin-bottom: 10px;
+    background-color: mediumpurple;
+}
+
+#profile-picture{
+    border-radius: 50%;
+}
+
+@keyframes posting {
+    0% {
+        opacity: 0;
+        height: 0px;
+    }
+    50% {
+        opacity: 0.5;
+        height: 50%;
+    }
+    100% {
+        opacity: 1;
+        height: 100%;
+    }
+}

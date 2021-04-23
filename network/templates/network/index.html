@@ -1,0 +1,77 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div id="index-container">
+        <div id="post-alerts">
+        </div>
+        <form id="post-form">
+            <fieldset id="post-fieldset">
+                <legend style="width:auto; margin-left: 30px;">New Post</legend>
+                <div style="padding-left: 30px; padding-right: 30px; padding-top: 10px; padding-bottom: 10px;">
+                    {% if user.is_authenticated %}
+                        <textarea id="post-textarea" cols="150" rows="5" required></textarea>
+                    {% else %}
+                        <textarea id="post-textarea" cols="150" rows="5" required disabled> Login First to make a post</textarea>
+                    {% endif %}
+                    <br>
+                </div>
+                {% if user.is_authenticated %}
+                    <input type="submit" value="Post" id="post-submit" class="btn btn-primary">
+                {% else %}
+                    <input type="submit" value="Post" id="post-submit" class="btn btn-primary" disabled>
+                {% endif %}
+            </fieldset>
+        </form>
+        <div id="all-posts">
+            {% for post in pageposts %}
+                <div class="post-class">
+                    <input type="hidden" value="{{ post.id }}" id="post-id">
+                    <div style="margin:5px 25px 5px 25px;">
+                        <a href="{% url 'profile' post.user.username 1 %}" id="post-username"><h2>{{ post.user.username }}</h2></a>
+                        <p id="postdata" style="white-space: pre-wrap; overflow: auto;">{{ post.postdata }}</p>
+                        <b>{{ post.timestamp }}</b><br>
+                    </div>
+                    {% if user.is_authenticated %}
+                        {% if post in userlikedposts %}
+                            <i class="fa fa-thumbs-down" id="like-btn" onclick="likepost(this)" style="color: red"></i> <span id="like-count">{{ post.likes.count }}</span>
+                        {% else %}
+                            <i class="fa fa-thumbs-up" id="like-btn" onclick="likepost(this)"></i> <span id="like-count">{{ post.likes.count }}</span>
+                        {% endif %}
+                    {% else %}
+                        <i class="fa fa-thumbs-up" id="like-btn"></i> <span id="like-count">{{ post.likes.count }}</span>
+                    {% endif %}
+                    {% if user == post.user %}
+                        <button onclick="edit(this)" class="btn" style="float:right">
+                            <img src="https://img.icons8.com/fluent/48/000000/edit.png" height="30px" width="30px"/>
+                        </button>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+        <h6>Page {{ currentpage }} of {{ pageposts.paginator.num_pages }}</h6>
+        <div>
+            <form id="pagenumber" action="{% url 'index' %}" method="post">
+                {% if pageposts.has_previous %}
+                    <a style="background-color: mediumpurple" class="btn btn-primary" href="/?page={{ pageposts.previous_page_number }}">Prev</a>
+                {% endif %}
+                {% csrf_token %}
+                <input type="number" id="pageinput" value="{{ currentpage }}" min="1" max="{{ pageposts.paginator.num_pages }}" name="wantedpagenumber">
+                {% if pageposts.has_next %}
+                    <a style="background-color: mediumpurple" class="btn btn-primary" href="/?page={{ pageposts.next_page_number }}">Next</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/javascript10.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector('#post-form').onsubmit = post_post;
+        });
+    </script>
+{% endblock %}
