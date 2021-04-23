@@ -4,7 +4,7 @@
 This is a social networking website created in **Python(Django)** and **Javascript**.  
 Here you can post anything you like you just have to make an account, you can also follow other people you like and also like the posts you like.  
 You can also edit your posts by clicking the pencil icon appearing on your own posts.
-
+***
 ### Features
 1. Register:
 To use this website you have to register/make and account so you can go on the register link to register yourself on this website.
@@ -47,10 +47,11 @@ You can Edit your posts by clicking the pencile icon appearing on your posts.
 On all those pages where the posts are being displayed there is pagination applied you as for smooth working of the website.
 On each page you can see the 10 posts at max, you can enter a number to skip to that page number.
    
+***   
 ### How To Run
 ```bash
 python manage.py runserver
 ```
-
+***
 ### Video 
 [Network](https://www.youtube.com/watch?v=H4VTxlGEkXU)
